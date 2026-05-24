@@ -1,5 +1,0 @@
-function WizardInput({ config }) {
-
-}
-
-
