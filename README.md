@@ -5,7 +5,7 @@
 - [] Separator
 - [] Textarea
 - [X] Badge
-- [] Combobox
+- [X] Combobox
 - [] DropdownMenu
 - [] Field
 - [] InputGroup
