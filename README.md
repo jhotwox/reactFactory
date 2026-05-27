@@ -4,7 +4,7 @@
 - [] Label
 - [] Separator
 - [] Textarea
-- [] Badge
+- [X] Badge
 - [] Combobox
 - [] DropdownMenu
 - [] Field
@@ -16,3 +16,6 @@
 - [] Show footer buttons
 
 ## Dynamic Table
+
+### PENDIENTE
+#### Combobox
