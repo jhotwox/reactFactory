@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Combobox,
   ComboboxContent,
@@ -19,14 +18,26 @@ import {
   ComboboxSeparator,
 } from "@/components/ui/combobox";
 // import { DropdownMenu } from "@/components/ui/dropdown-menu";
-// import { Field } from "@/components/ui/field";
+import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupButton,
+} from "@/components/ui/input-group";
 import { Input } from "@/components/ui/input";
-// import { InputGroup } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 // import { Select } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import React, { ComponentProps, Fragment, JSX, MouseEvent, SetStateAction } from "react";
+import React, {
+  ComponentProps,
+  Fragment,
+  JSX,
+  MouseEvent,
+  SetStateAction
+} from "react";
 import { HugeiconsIcon, IconSvgElement, HugeiconsProps } from "@hugeicons/react";
 import { Loading03Icon } from "@hugeicons/core-free-icons";
 import { AriaCombobox } from "../node_modules/@base-ui/react/esm/combobox/root/AriaCombobox.js";
@@ -55,14 +66,15 @@ type LoadingIconProps = {
   iconProps?: Omit<HugeiconsProps, "color" | "strokeWidth">;
 };
 
-type IGenericConfig = IconConfig & {
+type GenericConfig = {
   title: string;
   disabled?: boolean;
 };
 
-type INotSoGenericConfig = IconConfig & {
-  title: string;
-}
+type NotSoGenericConfig = { title: string; }
+
+type IGenericConfig = IconConfig & GenericConfig;
+type INotSoGenericConfig = IconConfig & NotSoGenericConfig;
 
 // type ClickButtonProps = {
 //   onClick: () => void;
@@ -110,12 +122,11 @@ type ComboboxOnValueChange =
   | React.Dispatch<SetStateAction<ComboboxValueType>>
   | React.Dispatch<SetStateAction<ComboboxValueType[]>>
 
-export type ComboboxConfig = {
+export type ComboboxConfig = GenericConfig & {
   type: "combobox";
   value: ComponentProps<typeof Combobox>["value"];
   onValueChange: ComboboxOnValueChange;
   // onValueChange: ComponentProps<typeof Combobox>["onValueChange"] | ((value: SetStateAction<null>) => void);
-  disabled?: boolean;
   placeholder?: string;
   items: string[] | customItem[];
   emptyText?: string;
@@ -134,11 +145,10 @@ type groupedItems = {
   items: string[];
 }
 
-export type ComboboxGroupConfig = {
+export type ComboboxGroupConfig = GenericConfig & {
   type: "comboboxgroup";
   value: ComponentProps<typeof Combobox>["value"];
   onValueChange: ComboboxOnValueChange;
-  disabled?: boolean;
   placeholder?: string;
   items: groupedItems[];
   emptyText?: string;
@@ -153,9 +163,31 @@ export type ComboboxGroupConfig = {
   // variant ?: ComponentProps<typeof Combobox>[""]
 }
 
+export type InputOnChangeValues = ComponentProps<typeof Input>["value"];
+
 export type InputConfig = IGenericConfig & {
     type: "input";
-    props?: ComponentProps<typeof Input>;
+    inputType?: ComponentProps<typeof Input>["type"];
+    value: ComponentProps<typeof Input>["value"];
+    onChange: React.Dispatch<SetStateAction<ComponentProps<typeof Input>["value"]>>;
+    placeholder?: string;
+    fieldDescription?: string;
+    fieldLabel?: string;
+    ariaInvalid?: boolean;
+    fieldOrientation?: ComponentProps<typeof Field>["orientation"];
+    required?: boolean;
+    // requiredIndicator?: string | React.ReactNode; //TODO: Maybe we can allow a custom required indicator, like an icon or something
+    requiredIndicator?: string | null;
+    fieldLabelBadge?: {
+      text: string;
+      variant?: ComponentProps<typeof Badge>["variant"];
+    };
+    inputGroup?: {
+      text?: string;
+      icon?: IconSvgElement;
+      iconPosition?: "left" | "right";
+    };
+    props?: Omit<ComponentProps<typeof Input>, "type" | "placeholder" | "disabled" | "aria-invalid" | "orientation" | "required">;
 }
 
 export type LabelConfig = IGenericConfig & {
@@ -163,7 +195,7 @@ export type LabelConfig = IGenericConfig & {
     props?: ComponentProps<typeof Label>;
 }
 
-export type SeparatorConfig = {
+export type SeparatorConfig = GenericConfig & {
     type: "separator";
     props?: ComponentProps<typeof Separator>;
 }
@@ -173,7 +205,7 @@ export type TextareaConfig = IGenericConfig & {
     props?: ComponentProps<typeof Textarea>;
 }
 
-type WizardInputConfig = BadgeConfig | ButtonConfig | ComboboxConfig | ComboboxGroupConfig | InputConfig | LabelConfig | SeparatorConfig | TextareaConfig;
+export type WizardInputConfig = BadgeConfig | ButtonConfig | ComboboxConfig | ComboboxGroupConfig | InputConfig | LabelConfig | SeparatorConfig | TextareaConfig;
 
 type WizardInputProps = {
   config: WizardInputConfig
@@ -458,6 +490,81 @@ export function WizardInput({ config }: WizardInputProps) {
           </ComboboxList>
         </ComboboxContent>
       </Combobox>
+    )
+  }
+  
+  // MARK: Input
+  if (config.type === "input") {
+    const type = (config as InputConfig)?.inputType ?? "text";
+    const value = (config as InputConfig)?.value ?? "";
+    const onChange = (config as InputConfig)?.onChange;
+    const placeholder = (config as InputConfig)?.placeholder ?? "Select";
+    const disabled = (config as InputConfig)?.disabled ?? false;
+    const title = (config as InputConfig).title;
+    const fieldDescription = (config as InputConfig)?.fieldDescription ?? null;
+    const fieldLabel = (config as InputConfig)?.fieldLabel ?? null;
+    const ariaInvalid = (config as InputConfig)?.ariaInvalid ?? false;
+    const fieldOrientation = (config as InputConfig)?.fieldOrientation ?? "vertical";
+    const required = (config as InputConfig)?.required ?? false;
+    const fieldLabelBadge = (config as InputConfig)?.fieldLabelBadge ?? null;
+    const requiredIndicator = (config as InputConfig)?.requiredIndicator ?? "*";
+    const inputGroup = (config as InputConfig)?.inputGroup ?? null;
+    const inputGroupAlign = inputGroup?.iconPosition === "left" ? "inline-start" : "inline-end";
+
+    return (
+      <Field orientation={fieldOrientation} className="my-2" >
+        
+        {fieldLabel && (
+          <FieldLabel htmlFor={`input-field-${title}`} className="flex">
+            <div>
+              {fieldLabel}
+              { required && <span aria-hidden="true" className="text-destructive">{requiredIndicator}</span>}
+            </div>
+            { fieldLabelBadge && <Badge variant={fieldLabelBadge.variant}>{fieldLabelBadge.text}</Badge>}
+          </FieldLabel>
+        )}
+  
+        {inputGroup ? (
+          <InputGroup>
+            <InputGroupInput
+              id={`input-field-${title}`}
+              placeholder={placeholder}
+              disabled={disabled}
+              aria-invalid={ariaInvalid}
+              required={required}
+              type={type}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              {...config.props}
+            />
+            <InputGroupAddon>
+              {inputGroup?.text && <InputGroupText>{inputGroup.text}</InputGroupText>}
+            </InputGroupAddon>
+            <InputGroupAddon align={inputGroupAlign}>
+              {inputGroup?.icon && <HugeiconsIcon icon={inputGroup.icon} />}
+            </InputGroupAddon>
+          </InputGroup>
+        ) : (
+          <Input
+            type={type}
+            placeholder={placeholder}
+            title={title}
+            id={`input-field-${title}`}
+            disabled={disabled}
+            aria-invalid={ariaInvalid}
+            required={required}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            {...config.props}
+          />
+        )}
+
+        
+        {fieldDescription && (
+          <FieldDescription>{fieldDescription}</FieldDescription>
+        )}
+
+      </Field>
     )
   }
   

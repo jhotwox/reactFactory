@@ -1,6 +1,14 @@
 "use client"
 
-import { BadgeConfig, ButtonConfig, ComboboxConfig, ComboboxGroupConfig, WizardInput } from "@/components/wizard-input";
+import {
+  BadgeConfig,
+  ButtonConfig,
+  ComboboxConfig,
+  ComboboxGroupConfig,
+  InputConfig,
+  InputOnChangeValues,
+  WizardInput
+} from "@/components/wizard-input";
 import { useTheme } from "@/components/theme-provider";
 import { HugeiconsIcon, IconSvgElement } from "@hugeicons/react"
 import { LogoutIcon, PlusSignIcon, BadgeCheck, BookmarkAddIcon } from "@hugeicons/core-free-icons"
@@ -8,6 +16,7 @@ import { ComponentExample } from "@/components/component-example";
 import { ComboboxItem } from "@/components/ui/combobox";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
+import { WizardForm, WizardFormConfig } from "@/components/wizard-form";
 // import { PlusSignIcon, BluetoothIcon, MoreVerticalCircle01Icon, FileIcon, FolderIcon, FolderOpenIcon, CodeIcon, MoreHorizontalCircle01Icon, SearchIcon, FloppyDiskIcon, DownloadIcon, EyeIcon, LayoutIcon, PaintBoardIcon, SunIcon, MoonIcon, ComputerIcon, UserIcon, CreditCardIcon, SettingsIcon, KeyboardIcon, LanguageCircleIcon, NotificationIcon, MailIcon, ShieldIcon, HelpCircleIcon, File01Icon, LogoutIcon } from "@hugeicons/core-free-icons"
 
 export default function Page() {
@@ -21,6 +30,11 @@ export default function Page() {
   const [value7, setValue7] = useState<unknown>(null);
   const [value8, setValue8] = useState<unknown[]>([]);
   
+  const [inputValue1, setInputValue1] = useState<InputOnChangeValues>("");
+  const [inputValue2, setInputValue2] = useState<InputOnChangeValues>("");
+  const [inputValue3, setInputValue3] = useState<InputOnChangeValues>("");
+  const [inputValue4, setInputValue4] = useState<InputOnChangeValues>("");
+
   const { setTheme } = useTheme();
   setTheme("dark");
 
@@ -70,6 +84,7 @@ export default function Page() {
 
   const ComboboxConfig = {
     type: "combobox",
+    title: "Simple Combobox",
     value: value1,
     onValueChange: setValue1,
     items: ["item 1", "item 2", "item 3"],
@@ -82,6 +97,7 @@ export default function Page() {
   
   const ComboboxMultiConfig = {
     type: "combobox",
+    title: "Simple Combobox Multiple",
     value: value2,
     onValueChange: setValue2,
     items: ["item 1", "item 2", "item 3"],
@@ -115,6 +131,7 @@ export default function Page() {
 
   const ComboboxCustomConfig = {
     type: "combobox",
+    title: "Custom Combobox",
     value: value3,
     onValueChange: setValue3,
     items: [
@@ -134,6 +151,7 @@ export default function Page() {
   
   const ComboboxMultiCustomConfig = {
     type: "combobox",
+    title: "Custom Combobox Multiple",
     value: value4,
     onValueChange: setValue4,
     items: [
@@ -187,6 +205,7 @@ export default function Page() {
   
   const ComboboxGroupConfig = {
     type: "comboboxgroup",
+    title: "Group Combobox",
     value: value5,
     onValueChange: setValue5,
     items: groupItems,
@@ -199,6 +218,7 @@ export default function Page() {
   
   const ComboboxGroupMultiConfig = {
     type: "comboboxgroup",
+    title: "Group Combobox Multiple",
     value: value6,
     onValueChange: setValue6,
     items: groupItems,
@@ -211,6 +231,7 @@ export default function Page() {
   
   const ComboboxGroupCustomConfig = {
     type: "comboboxgroup",
+    title: "Custom Group Combobox",
     value: value7,
     onValueChange: setValue7,
     items: groupItems,
@@ -224,6 +245,7 @@ export default function Page() {
   
   const ComboboxGroupMultiCustomConfig = {
       type: "comboboxgroup",
+      title: "Custom Group Combobox Multiple",
       value: value8,
     onValueChange: setValue8,
       items: groupItems,
@@ -235,6 +257,103 @@ export default function Page() {
       customItem: CustomGroupItem,
       // multiCustomItem: { chipValue: "label", key: "code" },
   } satisfies ComboboxGroupConfig;
+
+  const InputConfig = {
+    type: "input",
+    title: "username",
+    value: inputValue1,
+    onChange: setInputValue1,
+    inputType: "text",
+    placeholder: "",
+    fieldLabel: "Username",
+    // fieldLabelBadge: { text: "Required", variant: "destructive" },
+    fieldLabelBadge: { text: "beta", variant: "outline" },
+    fieldDescription: "Please enter your username",
+    // disabled: true,
+    // ariaInvalid: true,
+    // fieldOrientation: "horizontal",
+    required: true,
+    requiredIndicator: "*",
+    // inputGroup: {
+    //   text: "http://",
+    //   icon: PlusSignIcon,
+    //   // iconPosition: "left"
+    // },
+  } satisfies InputConfig;
+
+  const InputGroupConfig = {
+    type: "input",
+    title: "username",
+    value: inputValue2,
+    onChange: setInputValue2,
+    inputType: "url",
+    placeholder: "www.example.com",
+    fieldLabel: "URL",
+    // fieldLabelBadge: { text: "Required", variant: "destructive" },
+    // fieldLabelBadge: { text: "beta", variant: "outline" },
+    // fieldDescription: "Please enter the URL of your website",
+    // disabled: true,
+    // ariaInvalid: true,
+    // fieldOrientation: "horizontal",
+    // required: true,
+    // requiredIndicator: "*",
+    inputGroup: {
+      text: "http://",
+      icon: PlusSignIcon,
+      // iconPosition: "left"
+    },
+  } satisfies InputConfig;
+
+  const FormConfig = {
+    title: "First form",
+    description: "This is the first form created",
+    fields: [
+      {
+        type: "input",
+        value: inputValue1,
+        onChange: setInputValue1,
+        title: "name",
+        placeholder: "John",
+        fieldLabel: "Name"
+      } satisfies InputConfig,
+      {
+        type: "input",
+        value: inputValue2,
+        onChange: setInputValue2,
+        title: "lastname",
+        placeholder: "Doe",
+        fieldLabel: "Lastname"
+      } satisfies InputConfig,
+      {
+        type: "input",
+        value: inputValue3,
+        onChange: setInputValue3,
+        title: "email",
+        placeholder: "john.doe@example.com",
+        fieldLabel: "Email"
+      } satisfies InputConfig,
+      {
+        type: "input",
+        value: inputValue4,
+        onChange: setInputValue4,
+        title: "phone",
+        placeholder: "+1 123 456 7890",
+        fieldLabel: "Phone"
+      }
+    ],
+    agrupation: [
+      // ["name", "lastname", "email", "phone"]
+      // ["email", "lastname", "name", "phone"]
+      {
+        title: "Personal Information",
+        fields: ["lastname", "name"]
+      },
+      {
+        title: "Contact Information",
+        fields: ["phone", "email"],
+      }
+    ]
+  } satisfies WizardFormConfig;
 
   // return <ComponentExample />;
   
@@ -260,36 +379,42 @@ export default function Page() {
     // )
     
   // COMBOBOX EXAMPLES
-  // return <WizardInput config={ComboboxConfig} />;
-  // return <WizardInput config={ComboboxCustomConfig} />;
-  // return <WizardInput config={ComboboxGroupConfig} />;
+  // return (
+  //   <div className="mt-2 ml-2 items-center gap-1">
+  //     <h3>Simple combobox</h3>
+  //     <div className="flex gap-2 mb-4">
+  //       <WizardInput config={ComboboxConfig} />
+  //       <WizardInput config={ComboboxMultiConfig} />
+  //     </div>
 
-  return (
-    <div className="mt-2 ml-2 items-center gap-1">
-      <h3>Simple combobox</h3>
-      <div className="flex gap-2 mb-4">
-        <WizardInput config={ComboboxConfig} />
-        <WizardInput config={ComboboxMultiConfig} />
-      </div>
+  //     <h3>Custom combobox</h3>
+  //     <div className="flex gap-2 mb-4">
+  //       <WizardInput config={ComboboxCustomConfig} />
+  //       <WizardInput config={ComboboxMultiCustomConfig} />
+  //     </div>
 
-      <h3>Custom combobox</h3>
-      <div className="flex gap-2 mb-4">
-        <WizardInput config={ComboboxCustomConfig} />
-        <WizardInput config={ComboboxMultiCustomConfig} />
-      </div>
+  //     <h3>Group combobox</h3>
+  //     <div className="flex gap-2 mb-4">
+  //       <WizardInput config={ComboboxGroupConfig} />
+  //       <WizardInput config={ComboboxGroupMultiConfig} />
+  //     </div>
 
-      <h3>Group combobox</h3>
-      <div className="flex gap-2 mb-4">
-        <WizardInput config={ComboboxGroupConfig} />
-        <WizardInput config={ComboboxGroupMultiConfig} />
-      </div>
+  //     <h3>Custom group combobox</h3>
+  //     <div className="flex gap-2 mb-4">
+  //       <WizardInput config={ComboboxGroupCustomConfig} />
+  //       <WizardInput config={ComboboxGroupMultiCustomConfig} />
+  //     </div>
+  //   </div>
+  // )
 
-      <h3>Custom group combobox</h3>
-      <div className="flex gap-2 mb-4">
-        <WizardInput config={ComboboxGroupCustomConfig} />
-        <WizardInput config={ComboboxGroupMultiCustomConfig} />
-      </div>
-    </div>
-  )
+    // INPUT EXAMPLES
+    // return (
+    //   <div>
+    //     <WizardInput config={InputConfig} />
+    //     <WizardInput config={InputGroupConfig} />
+    //   </div>
+    // )
 
+    // WizardForm EXAMPLES
+    return <WizardForm config={FormConfig} />
 };
